@@ -115,3 +115,64 @@ fun loadUsers() {
   📦 Biblioteca: <code>org.jetbrains.kotlinx:kotlinx-coroutines-core</code>
 </p>
 
+<h2>🔄 Flow: Fluxos de Dados Reativos com Coroutines</h2>
+
+<p>
+  <strong>Flow</strong> é uma API do Kotlin para lidar com <em>fluxos de dados assíncronos e reativos</em>, construída sobre o poder das <code>coroutines</code>. Ele permite emitir múltiplos valores ao longo do tempo, de forma sequencial e não bloqueante.
+</p>
+
+<h3>🌊 O que é Flow?</h3>
+<p>
+  Um <code>Flow</code> representa um stream de valores que são produzidos de forma assíncrona. Diferente de uma função <code>suspend</code> (que retorna apenas um valor), um Flow pode emitir <strong>vários valores ao longo do tempo</strong>.
+</p>
+
+<p>É uma alternativa moderna e mais segura a ferramentas como <code>LiveData</code>, <code>RxJava</code> ou <code>Callback-based listeners</code>.</p>
+
+<h3>✅ Vantagens do Flow</h3>
+<ul>
+  <li><strong>Reatividade:</strong> responde automaticamente a mudanças de dados.</li>
+  <li><strong>Assíncrono:</strong> usa coroutines internamente e não bloqueia threads.</li>
+  <li><strong>Cancelável:</strong> integrado com escopos como <code>viewModelScope</code> ou <code>lifecycleScope</code>.</li>
+  <li><strong>Composição poderosa:</strong> oferece operadores como <code>map</code>, <code>filter</code>, <code>debounce</code>, <code>collect</code>, etc.</li>
+</ul>
+
+<h3>📌 Flow vs suspend</h3>
+<ul>
+  <li><code>suspend fun</code>: retorna <strong>um valor único</strong>.</li>
+  <li><code>Flow</code>: emite <strong>múltiplos valores ao longo do tempo</strong>.</li>
+</ul>
+
+<h3>🧪 Exemplo básico de Flow</h3>
+<pre><code class="language-kotlin">
+fun countToFive(): Flow&lt;Int&gt; = flow {
+    for (i in 1..5) {
+        emit(i) // emite cada número com um pequeno atraso
+        delay(1000)
+    }
+}
+</code></pre>
+
+<h3>🧪 Coletando o Flow</h3>
+<pre><code class="language-kotlin">
+viewModelScope.launch {
+    countToFive().collect { number ->
+        println("Recebido: $number")
+    }
+}
+</code></pre>
+
+<h3>📦 Quando usar Flow?</h3>
+<ul>
+  <li>Para observar dados em tempo real (ex: banco de dados, rede, sensores).</li>
+  <li>Para criar pipelines de transformação de dados reativos.</li>
+  <li>Para evitar <code>LiveData</code> em arquiteturas baseadas em Compose.</li>
+</ul>
+
+<h3>📚 Aprenda mais</h3>
+<p>
+  Documentação oficial: 
+  <a href="https://kotlinlang.org/docs/flow.html" target="_blank">Kotlin Flow</a><br/>
+  Biblioteca: <code>org.jetbrains.kotlinx:kotlinx-coroutines-core</code>
+</p>
+
+
