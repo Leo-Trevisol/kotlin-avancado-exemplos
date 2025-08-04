@@ -1,5 +1,6 @@
 package com.example.kotlinavancadoexemplos.coroutines
 
+// Importações necessárias para a Activity, Compose e ViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,67 +14,96 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-// Classe principal da Activity do app (ponto de entrada da tela)
+// Classe principal da aplicação, que representa a tela principal
 class MainActivity : ComponentActivity() {
+
+    // Método chamado quando a Activity é criada
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Ativa suporte a conteúdos desenhados até a borda da tela (tela cheia moderna)
+        // Permite que o conteúdo da tela ocupe toda a área (inclusive por trás de status bar)
         enableEdgeToEdge()
 
-        // Define a UI da tela usando Jetpack Compose
+        // Define o conteúdo da tela utilizando Jetpack Compose
         setContent {
-            UserScreen() // Chama o Composable que desenha a tela dos usuários
+            UserScreen() // Chama o composable que desenha a interface da tela de usuários
         }
     }
 }
 
-// Composable que representa a tela de exibição de usuários
+// Composable responsável por renderizar a UI de usuários
 @Composable
 fun UserScreen(viewModel: UserViewModel = viewModel()) {
-    // LaunchedEffect com chave Unit significa que este bloco será executado apenas uma vez
-    // quando o Composable entrar na composição pela primeira vez
-    LaunchedEffect(Unit) {
-        viewModel.loadUsers() // Dispara o carregamento dos dados (assíncrono)
-    }
+    // Observa o estado da UI vindo do ViewModel usando Flow (StateFlow)
+    val uiState by viewModel.uiState.collectAsState()
 
-    // Layout vertical (coluna) ocupando toda a tela, com padding de 16dp
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    // Coluna vertical que organiza os elementos da tela de forma empilhada
+    Column(
+        modifier = Modifier
+            .fillMaxSize() // Ocupa todo o espaço disponível na tela
+            .padding(16.dp) // Adiciona preenchimento interno (margem) em todos os lados
+    ) {
 
         // Título da tela
-        Text("Usuários", style = MaterialTheme.typography.headlineMedium)
+        Text(
+            "Usuários",
+            style = MaterialTheme.typography.headlineMedium // Estilo do texto definido pelo tema Material 3
+        )
 
-        // Se os dados ainda estão sendo carregados, mostra um spinner (indicador de progresso)
-        if (viewModel.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-        } else {
-            // Quando os dados estiverem prontos, exibe a lista com LazyColumn
-            LazyColumn {
-                // `items` percorre a lista de usuários vinda do ViewModel
-                items(viewModel.users) { user ->
+        // Verifica qual é o estado atual da UI para exibir o conteúdo apropriado
+        when (uiState) {
 
-                    // Cada item da lista é exibido em um Card estilizado
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth() // Ocupa toda a largura disponível
-                            .padding(vertical = 4.dp), // Espaço vertical entre os cards
-                        elevation = CardDefaults.cardElevation(4.dp) // Sombra do card
-                    ) {
-                        // Coluna com os dados do usuário
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            // Nome do usuário com estilo de título
-                            Text(
-                                text = user.name,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            // E-mail do usuário com estilo de texto comum
-                            Text(
-                                text = user.email,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+            // Caso esteja carregando os dados
+            is UiState.Loading -> {
+                // Mostra um indicador circular de carregamento
+                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+            }
+
+            // Caso os dados tenham sido carregados com sucesso
+            is UiState.Success -> {
+                // Acessa a lista de usuários vinda do estado de sucesso
+                val users = (uiState as UiState.Success).users
+
+                // Exibe a lista em uma rolagem vertical eficiente
+                LazyColumn {
+                    // Para cada item (usuário) da lista, cria um item na LazyColumn
+                    items(users) { user ->
+                        // Cria um cartão para exibir os dados do usuário
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth() // Faz o cartão ocupar toda a largura disponível
+                                .padding(vertical = 4.dp), // Espaçamento entre os cartões
+                            elevation = CardDefaults.cardElevation(4.dp) // Sombra do cartão
+                        ) {
+                            // Organiza os textos do usuário em coluna, dentro do cartão
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                // Nome do usuário
+                                Text(
+                                    text = user.name,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+
+                                // Email do usuário
+                                Text(
+                                    text = user.email,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
                         }
                     }
                 }
+            }
+
+            // Caso ocorra um erro ao buscar os dados
+            is UiState.Error -> {
+                // Acessa a mensagem de erro do estado de erro
+                val errorMessage = (uiState as UiState.Error).message
+
+                // Exibe a mensagem de erro em vermelho
+                Text(
+                    text = "Erro ao carregar: $errorMessage",
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
     }

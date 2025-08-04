@@ -1,52 +1,59 @@
 package com.example.kotlinavancadoexemplos.coroutines
 
+// Importa a classe base ViewModel para gerenciamento de UI com ciclo de vida
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 
+// Fornece um escopo de corrotina atrelado ao ciclo de vida do ViewModel
+import androidx.lifecycle.viewModelScope
+
+// Importa os tipos para controle reativo do estado da UI
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
+
+// ViewModel responsável por gerenciar os dados de usuário e estado da UI
 class UserViewModel : ViewModel() {
 
-    // Instância do repositório que fornece os dados (padrão Repository)
+    // Instância do repositório que fornece os dados dos usuários
     private val repository = UserRepository()
 
-    // Estado reativo que indica se os dados estão sendo carregados
-    // Usado para exibir um loading spinner na tela (compose reage a esse estado)
-    var isLoading by mutableStateOf(false)
+    // _uiState é um fluxo mutável que representa o estado atual da UI
+    // Começa com o estado UiState.Loading
+    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
 
-    // Lista reativa de usuários que será exibida na tela
-    // Compose observará mudanças nesta lista e atualizará automaticamente a UI
-    var users = mutableStateListOf<User>()
+    // uiState é a versão somente leitura (imutável) exposta para a UI
+    // A UI vai observar esse fluxo e reagir automaticamente às mudanças
+    val uiState: StateFlow<UiState> = _uiState
 
-    // Função pública que dispara o carregamento dos dados de usuários
+    // Bloco init é executado ao criar o ViewModel
+    // Aqui iniciamos o carregamento dos dados automaticamente
+    init {
+        loadUsers() // Dispara a função para buscar os usuários
+    }
+
+    // Função que inicia a coleta do fluxo de usuários do repositório
     fun loadUsers() {
-        // viewModelScope é uma CoroutineScope atrelada ao ciclo de vida do ViewModel.
-        // Ou seja, se o ViewModel for destruído, a coroutine também é cancelada automaticamente.
+        // Inicia uma nova coroutine no escopo do ViewModel
+        // Assim, a operação é cancelada automaticamente se o ViewModel for destruído
         viewModelScope.launch {
 
-            // Início do carregamento: ativa o estado de loading
-            isLoading = true
+            // Inicia o fluxo retornado por fetchUsers()
+            repository.fetchUsers()
+                // onStart é executado antes do primeiro emit()
+                // Aqui setamos o estado como "carregando"
+                .onStart { _uiState.value = UiState.Loading }
 
-            try {
-                // Chamada suspensa que busca os usuários de forma assíncrona
-                // Essa chamada NÃO bloqueia a UI, mesmo que demore
-                val result = repository.fetchUsers()
+                // catch captura qualquer exceção que aconteça dentro do fluxo
+                // Atualizamos o estado para erro, exibindo a mensagem apropriada
+                .catch { e -> _uiState.value = UiState.Error(e.message ?: "Erro desconhecido") }
 
-                // Limpa a lista atual e adiciona os novos usuários
-                users.clear()
-                users.addAll(result)
-
-            } catch (e: Exception) {
-                // Tratamento de erro: idealmente você deveria atualizar algum estado de erro
-                // para exibir uma mensagem ao usuário
-                // Por exemplo: errorMessage = e.message
-            } finally {
-                // Final do carregamento: desativa o estado de loading
-                isLoading = false
-            }
+                // collect coleta os valores emitidos pelo fluxo
+                // Aqui recebemos a lista de usuários e atualizamos o estado da UI para sucesso
+                .collect { users ->
+                    _uiState.value = UiState.Success(users)
+                }
         }
     }
 }
