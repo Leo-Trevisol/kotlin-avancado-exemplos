@@ -175,4 +175,58 @@ viewModelScope.launch {
   Biblioteca: <code>org.jetbrains.kotlinx:kotlinx-coroutines-core</code>
 </p>
 
+<h2>✨ Funções de Extensão no Kotlin</h2>
+
+<p>
+  Funções de extensão são uma das características mais poderosas do Kotlin. Elas permitem "adicionar" funcionalidades a classes já existentes sem precisar herdá-las ou usar padrões como <code>Decorator</code>. São amplamente usadas no Android moderno para deixar o código mais limpo, reutilizável e expressivo.
+</p>
+
+<h3>🔹 O que é uma função de extensão?</h3>
+<p>
+  É uma função que pode ser chamada como se fizesse parte da própria classe, mesmo que não tenha sido originalmente declarada nela. É muito usada para <strong>reduzir boilerplate</strong> e <strong>encapsular lógicas reutilizáveis</strong>.
+</p>
+
+<h3>💡 Exemplos práticos usados neste repositório</h3>
+
+<pre><code class="language-kotlin">
+// Capitaliza a primeira letra de cada palavra
+"ola mundo".capitalizeWords() // → "Ola Mundo"
+
+// Converte uma lista em string separada por vírgulas
+listOf("A", "B", "C").toCommaSeparated() // → "A, B, C"
+
+// Converte timestamp para data formatada
+System.currentTimeMillis().toFormattedDate() // → "07/08/2025"
+
+// Mostrar ou esconder teclado
+editText.showKeyboard()
+editText.hideKeyboard()
+
+// Escutar mudanças de texto
+editText.onTextChanged { novoTexto -> ... }
+
+// Logar erros com stacktrace completo
+throwable.logStackTrace()
+</code></pre>
+
+<h3>🔗 Benefícios das funções de extensão</h3>
+<ul>
+  <li><strong>Melhor legibilidade:</strong> transforma funções utilitárias em chamadas fluentes.</li>
+  <li><strong>Organização:</strong> permite separar funcionalidades por arquivos sem precisar modificar a classe original.</li>
+  <li><strong>Reuso:</strong> fácil de aplicar em múltiplas telas/componentes.</li>
+  <li><strong>Compatível com qualquer classe:</strong> pode ser usada com APIs Android, Java e do próprio Kotlin.</li>
+</ul>
+
+<h3>✨ Dica:</h3>
+<p>
+  Use extensões para lidar com <code>String</code>, <code>View</code>, <code>EditText</code>, <code>Throwable</code> e <code>Long</code> para encapsular transformações e comportamentos comuns de forma reutilizável.
+</p>
+
+<h3>📚 Aprenda mais</h3>
+<p>
+  Documentação oficial:
+  <a href="https://kotlinlang.org/docs/extensions.html" target="_blank">Funções de Extensão Kotlin</a>
+</p>
+
+
 
