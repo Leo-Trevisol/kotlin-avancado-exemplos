@@ -45,7 +45,7 @@
 </ul>
 
 
-<h2>🚀 Coroutines: Programação Assíncrona Moderna com Kotlin</h2>
+<h2>⚙️ Coroutines: Programação Assíncrona Moderna com Kotlin</h2>
 
 <p>
   As <strong>Coroutines</strong> são uma das principais ferramentas para lidar com <em>concorrência</em> e <em>assíncronia</em> de forma eficiente, segura e legível no Kotlin moderno. Elas substituem abordagens antigas como <code>Thread</code>, <code>Handler</code>, <code>AsyncTask</code> e <code>Callbacks</code> com uma API muito mais clara e fluente.
@@ -176,7 +176,7 @@ viewModelScope.launch {
   Biblioteca: <code>org.jetbrains.kotlinx:kotlinx-coroutines-core</code>
 </p>
 
-<h2>✨ Funções de Extensão no Kotlin</h2>
+<h2>🧩 Funções de Extensão no Kotlin</h2>
 
 <p>
   Funções de extensão são uma das características mais poderosas do Kotlin. Elas permitem "adicionar" funcionalidades a classes já existentes sem precisar herdá-las ou usar padrões como <code>Decorator</code>. São amplamente usadas no Android moderno para deixar o código mais limpo, reutilizável e expressivo.
