@@ -229,5 +229,61 @@ throwable.logStackTrace()
   <a href="https://kotlinlang.org/docs/extensions.html" target="_blank">Funções de Extensão Kotlin</a>
 </p>
 
+<h2>🛡️ Sealed Classes no Kotlin</h2>
+
+<p>
+  As <strong>Sealed Classes</strong> são um recurso poderoso do Kotlin para modelar hierarquias de tipos de forma <em>restrita e segura</em>. 
+  Diferente de classes abertas (<code>open</code>), elas permitem definir um conjunto <strong>fechado</strong> de subclasses possíveis, 
+  garantindo que todos os casos sejam tratados em tempo de compilação.
+</p>
+
+<h3>🔹 O que são Sealed Classes?</h3>
+<p>
+  São classes que limitam quais tipos podem herdá-las, geralmente usadas para representar <strong>estados</strong> e <strong>eventos</strong> 
+  em fluxos de dados. Todas as subclasses devem ser definidas no mesmo arquivo da sealed class.
+</p>
+
+<h3>✅ Vantagens</h3>
+<ul>
+  <li><strong>Segurança de tipo:</strong> o compilador garante que todos os casos sejam tratados no <code>when</code>.</li>
+  <li><strong>Código mais expressivo:</strong> fácil de entender quais estados/eventos existem.</li>
+  <li><strong>Manutenção simples:</strong> adicionar um novo estado força o ajuste em todos os locais relevantes.</li>
+</ul>
+
+<h3>🧪 Exemplo prático deste repositório</h3>
+<pre><code class="language-kotlin">
+// UiState.kt
+sealed class UiState {
+    object Loading : UiState()
+    data class Success(val data: List&lt;String&gt;) : UiState()
+    data class Error(val message: String) : UiState()
+}
+</code></pre>
+
+<h3>📌 Uso típico com when</h3>
+<pre><code class="language-kotlin">
+fun render(state: UiState) {
+    when (state) {
+        is UiState.Loading -&gt; showLoading()
+        is UiState.Success -&gt; showData(state.data)
+        is UiState.Error -&gt; showError(state.message)
+    }
+}
+</code></pre>
+
+<h3>💡 Quando usar Sealed Classes?</h3>
+<ul>
+  <li>Para representar <strong>estados de UI</strong> (Loading, Success, Error).</li>
+  <li>Para modelar <strong>eventos de navegação</strong> ou <strong>ações do usuário</strong>.</li>
+  <li>Para criar <strong>APIs seguras</strong> onde apenas casos conhecidos são permitidos.</li>
+</ul>
+
+<h3>📚 Aprenda mais</h3>
+<p>
+  Documentação oficial:
+  <a href="https://kotlinlang.org/docs/sealed-classes.html" target="_blank">Sealed Classes no Kotlin</a>
+</p>
+
+
 
 
