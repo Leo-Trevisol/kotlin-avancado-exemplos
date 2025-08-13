@@ -284,6 +284,123 @@ fun render(state: UiState) {
   <a href="https://kotlinlang.org/docs/sealed-classes.html" target="_blank">Sealed Classes no Kotlin</a>
 </p>
 
+<h2>🌀 Lambdas e Higher-Order Functions no Kotlin</h2>
+
+<p>
+No Kotlin, <strong>lambdas</strong> e <strong>higher-order functions</strong> permitem escrever código mais
+expressivo, conciso e flexível, especialmente em programação funcional e callbacks.
+</p>
+
+<hr>
+
+<h3>📌 O que são Lambdas?</h3>
+<p>
+Uma <em>lambda</em> é uma <strong>função anônima</strong> (sem nome) que pode ser atribuída a variáveis,
+passada como parâmetro ou retornada de outra função.
+</p>
+
+<pre><code class="language-kotlin">
+val soma: (Int, Int) -> Int = { a, b -> a + b }
+println(soma(5, 3)) // Saída: 8
+</code></pre>
+
+<ul>
+  <li><code>(Int, Int) -> Int</code> = tipo da função.</li>
+  <li><code>{ a, b -> a + b }</code> = implementação da função.</li>
+</ul>
+
+<p><strong>Vantagens:</strong> Evita criar funções desnecessárias, ótimo para expressões curtas e simples.</p>
+
+<hr>
+
+<h3>📌 O que são Higher-Order Functions?</h3>
+<p>
+Uma <strong>higher-order function</strong> é qualquer função que recebe outra função como parâmetro ou retorna uma função.
+</p>
+
+<pre><code class="language-kotlin">
+fun operacao(a: Int, b: Int, funcao: (Int, Int) -> Int): Int {
+    return funcao(a, b)
+}
+
+val somaResultado = operacao(10, 5) { x, y -> x + y }
+val multResultado = operacao(10, 5) { x, y -> x * y }
+
+println(somaResultado) // 15
+println(multResultado) // 50
+</code></pre>
+
+<p>
+O Kotlin permite sintaxe enxuta quando a função lambda é o último parâmetro:
+</p>
+
+<pre><code class="language-kotlin">
+operacao(8, 2) { x, y -> x - y } // Saída: 6
+</code></pre>
+
+<hr>
+
+<h3>📌 Uso do parâmetro implícito <code>it</code></h3>
+<p>
+Se houver apenas um parâmetro, você pode usar <code>it</code>:
+</p>
+
+<pre><code class="language-kotlin">
+val dobro: (Int) -> Int = { it * 2 }
+println(dobro(4)) // 8
+</code></pre>
+
+<hr>
+
+<h3>📌 Exemplo prático</h3>
+<p>
+Funções como <code>filter</code>, <code>map</code> e <code>forEach</code> no Kotlin são <em>higher-order functions</em> que recebem lambdas.
+</p>
+
+<pre><code class="language-kotlin">
+val numeros = listOf(1, 2, 3, 4, 5)
+val pares = numeros.filter { it % 2 == 0 }
+println(pares) // [2, 4]
+</code></pre>
+
+<hr>
+
+<h3>📌 Comparação: sem vs. com lambdas</h3>
+
+<p><strong>Sem lambdas:</strong></p>
+<pre><code class="language-kotlin">
+fun ehPar(num: Int): Boolean {
+    return num % 2 == 0
+}
+
+val pares = numeros.filter(::ehPar)
+</code></pre>
+
+<p><strong>Com lambdas:</strong></p>
+<pre><code class="language-kotlin">
+val pares = numeros.filter { it % 2 == 0 }
+</code></pre>
+
+<p>
+Com lambdas, evitamos código extra e deixamos o fluxo mais claro.
+</p>
+
+<hr>
+
+<h3>🚀 Por que usar?</h3>
+<ul>
+  <li>Menos código repetitivo.</li>
+  <li>Mais legibilidade em operações simples.</li>
+  <li>Facilidade para passar lógica como argumento.</li>
+  <li>Base para programação funcional e APIs reativas.</li>
+</ul>
+
+<h3>📚 Aprenda mais</h3>
+<p>
+  Documentação oficial:
+  <a href="https://kotlinlang.org/docs/lambdas.html" target="_blank">Lambdas e Higher-Order Functions no Kotlin</a>
+</p>
+
 
 
 
