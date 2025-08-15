@@ -530,6 +530,153 @@ println(nome?.length)
   </a>
 </p>
 
+<h2>🛠️ DSLs (Domain Specific Languages) no Kotlin</h2>
+
+<p>
+O Kotlin oferece suporte poderoso para criar <strong>DSLs (Domain Specific Languages)</strong>, 
+que são linguagens específicas de domínio projetadas para tornar o código mais 
+expressivo e legível dentro de um contexto específico.
+</p>
+
+<hr>
+
+<h3>📌 O que é uma DSL?</h3>
+<p>
+Uma <strong>DSL</strong> é uma forma de escrever código usando a própria sintaxe da linguagem, 
+mas adaptada para representar de maneira mais natural uma determinada regra de negócio 
+ou construção de interface.  
+No Kotlin, isso é facilitado por recursos como:
+</p>
+
+<ul>
+  <li>Funções de extensão</li>
+  <li>Funções de ordem superior (High-order functions)</li>
+  <li>Lambdas com receiver</li>
+  <li>Builders</li>
+</ul>
+
+<p>
+A ideia é que o código "pareça" uma linguagem própria para o problema, 
+facilitando a leitura e a manutenção.
+</p>
+
+<hr>
+
+<h3>📌 Exemplo simples de DSL</h3>
+
+<pre><code class="language-kotlin">
+// Definindo uma DSL simples para criar um HTML fictício
+fun html(block: HtmlBuilder.() -> Unit): String {
+    val builder = HtmlBuilder()
+    builder.block()
+    return builder.build()
+}
+
+class HtmlBuilder {
+    private val content = StringBuilder()
+    
+    fun body(block: () -> String) {
+        content.append("&lt;body&gt;${block()}&lt;/body&gt;")
+    }
+
+    fun build() = content.toString()
+}
+
+// Uso da DSL
+val pagina = html {
+    body { "Olá, mundo!" }
+}
+
+println(pagina) // <body>Olá, mundo!</body>
+</code></pre>
+
+<p>
+Nesse exemplo, a função <code>html { ... }</code> cria uma sintaxe mais próxima de 
+uma linguagem de marcação, mas escrita em Kotlin.
+</p>
+
+<hr>
+
+<h3>📌 DSLs no Jetpack Compose</h3>
+<p>
+O <strong>Jetpack Compose</strong> é um exemplo perfeito de DSL declarativa no Kotlin.
+Você descreve a interface usando funções Kotlin que representam elementos da UI:
+</p>
+
+<pre><code class="language-kotlin">
+@Composable
+fun TelaExemplo() {
+    Column {
+        Text("Bem-vindo!")
+        Button(onClick = { println("Clicou!") }) {
+            Text("Clique aqui")
+        }
+    }
+}
+</code></pre>
+
+<ul>
+  <li><code>Column { ... }</code> representa um container vertical.</li>
+  <li><code>Text()</code> e <code>Button()</code> são funções que compõem a UI.</li>
+  <li>A sintaxe é declarativa e lembra uma mini-linguagem para criar interfaces.</li>
+</ul>
+
+<hr>
+
+<h3>📌 DSLs no Ktor</h3>
+<p>
+O <strong>Ktor</strong> (framework para aplicações web em Kotlin) também utiliza 
+DSLs para definir rotas e configurações de servidor:
+</p>
+
+<pre><code class="language-kotlin">
+fun main() {
+    embeddedServer(Netty, port = 8080) {
+        routing {
+            get("/") {
+                call.respondText("Olá, mundo!")
+            }
+            post("/enviar") {
+                val dados = call.receiveText()
+                call.respondText("Recebido: $dados")
+            }
+        }
+    }.start(wait = true)
+}
+</code></pre>
+
+<p>
+Aqui, a estrutura <code>routing { ... }</code> cria um "mini-linguagem" para definir endpoints,
+evitando código repetitivo e melhorando a clareza.
+</p>
+
+<hr>
+
+<h3>🚀 Por que usar DSLs?</h3>
+<ul>
+  <li>Código mais expressivo e próximo da linguagem do domínio.</li>
+  <li>Menos boilerplate e mais clareza.</li>
+  <li>Facilita a leitura para quem conhece o negócio, mesmo sem entender toda a linguagem.</li>
+  <li>Permite criar APIs internas elegantes.</li>
+</ul>
+
+<hr>
+
+<h3>📚 Dicas para criar DSLs no Kotlin</h3>
+<ul>
+  <li>Use <strong>funções de extensão</strong> para adicionar comportamentos sem modificar classes originais.</li>
+  <li>Utilize <strong>lambdas com receiver</strong> para um código mais fluido.</li>
+  <li>Mantenha a sintaxe intuitiva e consistente.</li>
+</ul>
+
+<p>
+  Documentação oficial:
+  <a href="https://kotlinlang.org/docs/type-safe-builders.html" target="_blank">
+    Kotlin DSLs e Builders
+  </a>
+</p>
+
+
 
 
 
