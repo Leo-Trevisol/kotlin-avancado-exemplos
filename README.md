@@ -401,6 +401,136 @@ Com lambdas, evitamos código extra e deixamos o fluxo mais claro.
   <a href="https://kotlinlang.org/docs/lambdas.html" target="_blank">Lambdas e Higher-Order Functions no Kotlin</a>
 </p>
 
+<h2>🚫 Null Safety e Smart Casts no Kotlin</h2>
+
+<p>
+O Kotlin foi projetado para <strong>eliminar os temidos NullPointerException</strong> (NPEs) 
+tão comuns em Java, oferecendo recursos nativos de <em>Null Safety</em> e <em>Smart Casts</em> 
+que tornam o código mais seguro e legível.
+</p>
+
+<hr>
+
+<h3>📌 O que é Null Safety?</h3>
+<p>
+O <strong>Null Safety</strong> garante que uma variável só possa conter <code>null</code> 
+se isso for explicitamente permitido usando <code>?</code> no tipo.
+</p>
+
+<pre><code class="language-kotlin">
+// Variável que NÃO pode ser nula
+var nome: String = "Leo"
+// nome = null // Erro de compilação
+
+// Variável que pode ser nula
+var apelido: String? = null
+apelido = "Trevisol"
+</code></pre>
+
+<ul>
+  <li><code>String</code> → Não aceita <code>null</code>.</li>
+  <li><code>String?</code> → Aceita <code>null</code>.</li>
+</ul>
+
+<hr>
+
+<h3>📌 Operadores de Segurança</h3>
+<p>
+Kotlin oferece operadores para trabalhar com valores nulos de forma segura:
+</p>
+
+<pre><code class="language-kotlin">
+val texto: String? = null
+
+// Safe Call (?.) — Executa apenas se não for nulo
+println(texto?.length) // null
+
+// Elvis Operator (?:) — Valor padrão se for nulo
+println(texto ?: "Desconhecido") // "Desconhecido"
+
+// Non-null assertion (!!) — Lança exceção se for nulo
+println(texto!!.length) // NullPointerException
+</code></pre>
+
+<p><strong>Regra de ouro:</strong> Use <code>!!</code> apenas quando tiver certeza que não será nulo.</p>
+
+<hr>
+
+<h3>📌 O que são Smart Casts?</h3>
+<p>
+<em>Smart Cast</em> é quando o Kotlin reconhece automaticamente o tipo de uma variável
+após uma verificação de tipo ou de nulidade, evitando casts manuais.
+</p>
+
+<pre><code class="language-kotlin">
+fun printLength(texto: String?) {
+    if (texto != null) {
+        // Smart Cast: texto é tratado como String (não String?)
+        println("Tamanho: ${texto.length}")
+    }
+}
+</code></pre>
+
+<p>
+Não é necessário fazer <code>(texto as String)</code> — o compilador entende automaticamente.
+</p>
+
+<hr>
+
+<h3>📌 Exemplo com Safe Call + Smart Cast</h3>
+
+<pre><code class="language-kotlin">
+fun processarUsuario(nome: String?) {
+    nome?.let {
+        // Aqui 'it' é garantidamente não nulo
+        println("Usuário: $it")
+        println("Tamanho: ${it.length}")
+    }
+}
+</code></pre>
+
+<p>
+Usando <code>let</code> com <code>?.</code>, o bloco só é executado se a variável não for nula,
+e dentro dele o valor já é <strong>smart casted</strong>.
+</p>
+
+<hr>
+
+<h3>📌 Comparação: Java vs. Kotlin</h3>
+
+<p><strong>Java (mais verboso e arriscado):</strong></p>
+<pre><code class="language-java">
+String nome = null;
+if (nome != null) {
+    System.out.println(nome.length());
+}
+</code></pre>
+
+<p><strong>Kotlin (mais conciso e seguro):</strong></p>
+<pre><code class="language-kotlin">
+val nome: String? = null
+println(nome?.length)
+</code></pre>
+
+<hr>
+
+<h3>🚀 Por que usar?</h3>
+<ul>
+  <li>Evita <code>NullPointerException</code> em tempo de execução.</li>
+  <li>Menos verificações manuais de <code>null</code>.</li>
+  <li>Código mais limpo e legível.</li>
+  <li>Melhor integração com APIs Java, que podem retornar <code>null</code>.</li>
+</ul>
+
+<h3>📚 Aprenda mais</h3>
+<p>
+  Documentação oficial:
+  <a href="https://kotlinlang.org/docs/null-safety.html" target="_blank">
+    Null Safety no Kotlin
+  </a>
+</p>
+
+
 
 
 
